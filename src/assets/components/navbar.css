@@ -1,0 +1,72 @@
+nav{
+    position: absolute;
+    z-index: 10;
+}
+
+nav, nav button {
+    width: 100%;
+    height: 100%;
+}
+
+div#nav__upper, div#nav__lower{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 3rem;
+}
+
+div#nav__upper div#nav__upper__yt_logo{
+    width: 7.0625rem;
+    height: 3rem;
+}
+
+div#nav__upper div#nav__upper__yt_logo button svg {
+    padding: 0 .75rem;
+}
+
+div#nav__upper div#nav__upper__search_account{
+    display: flex;
+}
+
+div#nav__upper div#nav__upper__search_account button{
+    padding: .75rem;
+}
+
+div#nav__lower{
+    border: .05rem rgba(0, 0, 0, .1) solid;
+    justify-content: start;
+}
+
+div#nav__lower div#nav__lower__sidebar button {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2.625rem;
+    height: 2rem;
+    margin: 0 1.75rem 0 .75rem;
+    padding: .2rem 0;
+    background-color: rgba(0, 0, 0, .05);
+}
+
+div#nav__lower div#nav__lower__sidebar button::after{
+    content: "";
+    position: absolute;
+    background-color: rgba(0, 0, 0, .05);
+    width: 1px;
+    height: 100%;
+    top: 0;
+    right: 0;
+    transform: translateX(1rem);
+}
+
+div#nav__lower div#nav__lower__category {
+    display: flex;
+    align-items: center;
+    overflow-x: scroll;
+    width: 100%;
+    white-space: nowrap; /*make content not wrap so it overflow and can be scroll horizontally*/
+    column-gap: .5rem;
+
+}
