@@ -3,7 +3,7 @@ interface CategoryProps {
   href: string;
   isSelected: boolean;
   index: number;
-  handleStyleButton(idx: number): void;
+  handleStyleCategory(idx: number): void;
 }
 
 export default CategoryProps;

@@ -5,10 +5,10 @@ function Category({
   value,
   isSelected,
   index,
-  handleStyleButton,
+  handleStyleCategory,
 }: CategoryProps) {
   function handleClick() {
-    if (!isSelected) handleStyleButton(index);
+    if (!isSelected) handleStyleCategory(index);
   }
   return (
     <button
