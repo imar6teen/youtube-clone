@@ -1,6 +1,5 @@
 import "../assets/components/navbar.css";
 import { useState } from "react";
-import { svgStyle } from "../constants/index";
 import Category from "./Category";
 
 const buttons: Array<any> = [

@@ -6,7 +6,7 @@ function Header() {
   const headerRef = useRef<any>(false);
   const clientScroll = useRef<number>(window.scrollY);
 
-  const handleHideHeader = (e: Event) => {
+  const handleHideHeader = () => {
     if (clientScroll.current < window.scrollY)
       headerRef.current.style.transform = "translateY(-6.25rem)";
     else headerRef.current.style.transform = "translateY(0)";
