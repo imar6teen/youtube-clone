@@ -1,7 +1,8 @@
-nav{
-    position: absolute;
+/* nav{
     z-index: 10;
-}
+    top: 0;
+    left: 0;
+} */
 
 nav, nav button {
     width: 100%;
@@ -31,6 +32,10 @@ div#nav__upper div#nav__upper__search_account{
 
 div#nav__upper div#nav__upper__search_account button{
     padding: .75rem;
+}
+div#nav__upper div#nav__upper__search_account button#nav__upper__search_account__account{
+    padding: .75rem;
+    padding-right: 1.5rem;
 }
 
 div#nav__lower{
