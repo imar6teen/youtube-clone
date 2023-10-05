@@ -1,8 +1,5 @@
 import "../assets/pages/home.css";
-import Account from "../components/Account";
-import Body from "../components/Body";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
+import { Account, Body, Footer, Header } from "../components";
 import { appStates } from "../hooks";
 
 function Home() {
