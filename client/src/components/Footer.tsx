@@ -22,7 +22,7 @@ function Footer() {
             <p>Home</p>
           </div>
         </button>
-        <button id="footer__buttons__shorts">
+        <button id="footer__buttons__shorts" disabled>
           <div id="footer__buttons__shorts__image">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +37,7 @@ function Footer() {
             <p>Shorts</p>
           </div>
         </button>
-        <button id="footer__buttons__library">
+        <button id="footer__buttons__library" disabled>
           <div id="footer__buttons__library__image">
             <svg
               xmlns="http://www.w3.org/2000/svg"
