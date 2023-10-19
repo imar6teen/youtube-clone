@@ -8,6 +8,7 @@ import svgFeedback from "../assets/image/feedback.svg";
 import svgYtMusic from "../assets/image/youtubemusic.svg";
 import svgYtKids from "../assets/image/youtubekids.svg";
 import svgOpenApp from "../assets/image/openapp.svg";
+import { VITE_BACKEND_URL } from "../config/app";
 
 function Account() {
   const [_, dispatch] = appStates.useContextStates();
@@ -19,7 +20,7 @@ function Account() {
           <button onClick={() => dispatch({ type: "togglePopUpAccount" })}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              enable-background="new 0 0 24 24"
+              enableBackground="new 0 0 24 24"
               height="24"
               viewBox="0 0 24 24"
               width="24"
@@ -38,7 +39,7 @@ function Account() {
           svg={svgSignIn}
           name="Sign In"
           isShowBorder={true}
-          isDisabled={false}
+          href={`${VITE_BACKEND_URL}/api/auth/url-login`}
         />
         <ButtonAccount
           key={svgSettings}

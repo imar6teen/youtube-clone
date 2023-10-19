@@ -1,6 +1,6 @@
 interface ButtonAccountProps {
   isShowBorder?: boolean;
-  isDisabled?: boolean;
+  href?: string;
   name: string;
   svg: string;
 }

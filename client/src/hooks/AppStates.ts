@@ -4,11 +4,20 @@ interface PopUpAccountStates {
   isClosed: boolean;
 }
 
-interface States {
-  PopAccount: PopUpAccountStates;
+interface AuthStates {
+  email: string;
+  name: string;
+  pictureUrl: string;
 }
 
-type Actions = { type: "togglePopUpAccount" };
+interface States {
+  PopAccount: PopUpAccountStates;
+  Auth: AuthStates;
+}
+
+type Actions =
+  | { type: "togglePopUpAccount" }
+  | { type: "fillAuth"; value: AuthStates };
 // | {} fill it when add new state
 
 type AfterReducer = [States, React.Dispatch<Actions>];
@@ -17,7 +26,19 @@ type AfterReducer = [States, React.Dispatch<Actions>];
 const stateReducer = (state: States, action: Actions): States => {
   switch (action.type) {
     case "togglePopUpAccount":
-      return { PopAccount: { isClosed: !state.PopAccount.isClosed } };
+      return {
+        PopAccount: { isClosed: !state.PopAccount.isClosed },
+        Auth: state.Auth,
+      };
+    case "fillAuth":
+      return {
+        PopAccount: state.PopAccount,
+        Auth: {
+          email: action.value.email,
+          name: action.value.name,
+          pictureUrl: action.value.pictureUrl,
+        },
+      };
     default:
       throw new Error("unknown action");
   }
@@ -25,6 +46,7 @@ const stateReducer = (state: States, action: Actions): States => {
 
 const initialStates: States = {
   PopAccount: { isClosed: true },
+  Auth: { email: "", name: "", pictureUrl: "" },
 };
 
 const useReducerStates = () => useReducer(stateReducer, initialStates);

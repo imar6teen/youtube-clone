@@ -1,3 +1,4 @@
 import appStates from "./AppStates";
+import useGetProfile from "./useGetProfile";
 
-export { appStates };
+export { appStates, useGetProfile };

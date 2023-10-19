@@ -5,20 +5,22 @@ function ButtonAccount({
   isShowBorder = false,
   name,
   svg,
-  isDisabled = true,
+  href = "",
 }: ButtonAccountProps) {
   return (
-    <button
-      className={`button_account ${isShowBorder ? "bordered" : ""}`}
-      disabled={isDisabled}
-    >
-      <div className="button_account__icon">
-        <img src={svg} alt={name} />
-      </div>
-      <div className="button_account__name">
-        <p>{name}</p>
-      </div>
-    </button>
+    <a href={`${href}`}>
+      <button
+        className={`button_account ${isShowBorder ? "bordered" : ""}`}
+        disabled={href === "" ? true : false}
+      >
+        <div className="button_account__icon">
+          <img src={svg} alt={name} />
+        </div>
+        <div className="button_account__name">
+          <p>{name}</p>
+        </div>
+      </button>
+    </a>
   );
 }
 

@@ -10,9 +10,10 @@
     --black: #282828;
 }
 
-button{
+a, button{
     list-style-type: none;
     outline: none;
     border: none;
     background-color: transparent;
+    text-decoration: none;
 }
