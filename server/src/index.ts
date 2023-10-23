@@ -7,11 +7,15 @@ import cors from "cors";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
 
 async function main() {
   const app = express();
   const server = http.createServer(app);
 
+  app.use(
+    morgan(":method :url :status :res[content-length] - :response-time ms")
+  );
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
