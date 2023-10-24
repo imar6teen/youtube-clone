@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import axios from "axios";
 import { appStates } from ".";
-import { VITE_BACKEND_URL } from "../config/app";
+import { VITE_BACKEND_URL, VITE_NODE_ENV } from "../config/app";
 
 export default function useGetProfile(): boolean {
   const [_, dispatch] = appStates.useContextStates();
@@ -20,8 +20,7 @@ export default function useGetProfile(): boolean {
         value: { email, pictureUrl: picture, name },
       });
     } catch (err) {
-      console.log(err);
-      // TODO Error handling here
+      if (VITE_NODE_ENV !== "production") console.error(err);
     }
   }
 

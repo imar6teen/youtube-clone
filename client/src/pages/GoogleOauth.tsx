@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { appStates } from "../hooks";
 import axios from "axios";
-import { VITE_BACKEND_URL } from "../config/app";
+import { VITE_BACKEND_URL, VITE_NODE_ENV } from "../config/app";
 
 function GoogleOauth() {
   const isLogin = useRef<boolean>(false);
@@ -36,13 +36,10 @@ function GoogleOauth() {
         return navigate("/");
       }, 1000);
     } catch (err) {
-      // TODO Create Error Handling
-      if (err instanceof Error) {
-        console.log(err.message);
-        setTimeout(() => {
-          return navigate("/");
-        }, 3000);
-      }
+      if (VITE_NODE_ENV !== "production") console.error(err);
+      setTimeout(() => {
+        return navigate("/");
+      }, 3000);
     }
   }
 
