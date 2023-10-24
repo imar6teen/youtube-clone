@@ -1,22 +1,22 @@
-import "../assets/components/buttonAccount.css";
-import { ButtonAccountProps } from "../types";
+import "../assets/components/buttonSidebarAccount.css";
+import { ButtonSidebarAccountProps } from "../types";
 
 function ButtonAccount({
   isShowBorder = false,
   name,
   svg,
   href = "",
-}: ButtonAccountProps) {
+}: ButtonSidebarAccountProps) {
   return (
     <a href={`${href}`}>
       <button
-        className={`button_account ${isShowBorder ? "bordered" : ""}`}
+        className={`button_sidebar_account ${isShowBorder ? "bordered" : ""}`}
         disabled={href === "" ? true : false}
       >
-        <div className="button_account__icon">
+        <div className="button_sidebar_account__icon">
           <img src={svg} alt={name} />
         </div>
-        <div className="button_account__name">
+        <div className="button_sidebar_account__name">
           <p>{name}</p>
         </div>
       </button>

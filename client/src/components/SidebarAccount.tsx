@@ -1,6 +1,6 @@
-import "../assets/components/account.css";
+import "../assets/components/sidebarAccount.css";
 import { appStates } from "../hooks";
-import ButtonAccount from "./ButtonAccount";
+import ButtonSidebarAccount from "./ButtonSidebarAccount";
 import svgSignIn from "../assets/image/signin.svg";
 import svgSettings from "../assets/image/settings.svg";
 import svgHelp from "../assets/image/help.svg";
@@ -10,13 +10,13 @@ import svgYtKids from "../assets/image/youtubekids.svg";
 import svgOpenApp from "../assets/image/openapp.svg";
 import { VITE_BACKEND_URL } from "../config/app";
 
-function Account() {
-  const [_, dispatch] = appStates.useContextStates();
+function SidebarAccount() {
+  const [states, dispatch] = appStates.useContextStates();
 
   return (
-    <div id="account">
-      <div id="account__header">
-        <div id="account__header__close">
+    <div id="sidebar_account">
+      <div id="sidebar_account__header">
+        <div id="sidebar_account__header__close">
           <button onClick={() => dispatch({ type: "togglePopUpAccount" })}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -29,42 +29,50 @@ function Account() {
             </svg>
           </button>
         </div>
-        <div id="account__header__account">
+        <div id="sidebar_account__header__account">
           <p>Account</p>
         </div>
       </div>
-      <div id="account__buttons">
-        <ButtonAccount
+      <div id="sidebar_account__buttons">
+        <ButtonSidebarAccount
           key={svgSignIn}
           svg={svgSignIn}
           name="Sign In"
           isShowBorder={true}
           href={`${VITE_BACKEND_URL}/api/auth/url-login`}
         />
-        <ButtonAccount
+        <ButtonSidebarAccount
           key={svgSettings}
           svg={svgSettings}
           name="Settings"
           isShowBorder={true}
         />
-        <ButtonAccount key={svgHelp} svg={svgHelp} name="Help" />
-        <ButtonAccount
+        <ButtonSidebarAccount key={svgHelp} svg={svgHelp} name="Help" />
+        <ButtonSidebarAccount
           key={svgFeedback}
           svg={svgFeedback}
           name="Feedback"
           isShowBorder={true}
         />
-        <ButtonAccount key={svgYtMusic} svg={svgYtMusic} name="YouTube Music" />
-        <ButtonAccount
+        <ButtonSidebarAccount
+          key={svgYtMusic}
+          svg={svgYtMusic}
+          name="YouTube Music"
+        />
+        <ButtonSidebarAccount
           key={svgYtKids}
           svg={svgYtKids}
           name="YouTube Kids"
           isShowBorder={true}
         />
-        <ButtonAccount key={svgOpenApp} svg={svgOpenApp} name="Open App" />
+        <ButtonSidebarAccount
+          key={svgOpenApp}
+          svg={svgOpenApp}
+          name="Open App"
+        />
       </div>
     </div>
   );
 }
 
-export default Account;
+export default SidebarAccount;

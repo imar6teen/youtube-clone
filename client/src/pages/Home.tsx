@@ -1,5 +1,5 @@
 import "../assets/pages/home.css";
-import { Account, Body, Footer, Header } from "../components";
+import { SidebarAccount, Body, Footer, Header } from "../components";
 import { appStates } from "../hooks";
 
 function Home() {
@@ -8,7 +8,7 @@ function Home() {
   return (
     <div id="home">
       <Header />
-      {states.PopAccount.isClosed ? null : <Account />}
+      {states.PopAccount.isClosed ? null : <SidebarAccount />}
       <Body />
       <Footer />
     </div>

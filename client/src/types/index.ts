@@ -1,5 +1,5 @@
 import CategoryProps from "./CategoryProps";
-import ButtonAccountProps from "./ButtonAccountProps";
+import ButtonSidebarAccountProps from "./ButtonSidebarAccountProps";
 import RequestOnceProps from "./RequestOnceProps";
 
-export type { CategoryProps, ButtonAccountProps, RequestOnceProps };
+export type { CategoryProps, ButtonSidebarAccountProps, RequestOnceProps };
