@@ -38,6 +38,12 @@ div#nav__upper div#nav__upper__search_account button#nav__upper__search_account_
     padding-right: 1.5rem;
 }
 
+div#nav__upper div#nav__upper__search_account button#nav__upper__search_account__account img{
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
 div#nav__lower{
     border: .05rem rgba(0, 0, 0, .1) solid;
     justify-content: start;

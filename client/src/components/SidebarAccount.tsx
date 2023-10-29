@@ -2,16 +2,88 @@ import "../assets/components/sidebarAccount.css";
 import { appStates } from "../hooks";
 import ButtonSidebarAccount from "./ButtonSidebarAccount";
 import svgSignIn from "../assets/image/signin.svg";
-import svgSettings from "../assets/image/settings.svg";
-import svgHelp from "../assets/image/help.svg";
-import svgFeedback from "../assets/image/feedback.svg";
-import svgYtMusic from "../assets/image/youtubemusic.svg";
-import svgYtKids from "../assets/image/youtubekids.svg";
-import svgOpenApp from "../assets/image/openapp.svg";
 import { VITE_BACKEND_URL } from "../config/app";
+import { sidebarAccountButtons } from "../constants/index";
+
+const { AUTHBUTTONS, UNAUTHBUTTONS } = sidebarAccountButtons;
+
+type ManageAccountProps = {
+  email: string;
+  name: string;
+  pictureUrl: string;
+};
+
+type ButtonsAuthProps = ManageAccountProps;
+
+function ManageAccount({ email, name, pictureUrl }: ManageAccountProps) {
+  return (
+    <div id="sidebar_account__manage_account">
+      <div id="sidebar_account__manage_account__img">
+        <img src={pictureUrl} alt="" />
+      </div>
+      <div id="sidebar_account__manage_account__google_account">
+        <div id="sidebar_account__manage_account__google_account__profile">
+          <div id="sidebar_account__manage_account__google_account__profile__username">
+            <p>{name}</p>
+          </div>
+          <div id="sidebar_account__manage_account__google_account__profile__email">
+            <p>{email}</p>
+          </div>
+        </div>
+        <div id="sidebar_account__manage_account__google_account__manage">
+          <button disabled={true}>Manage your Google Account</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ButtonsAuth({ email, name, pictureUrl }: ButtonsAuthProps) {
+  return (
+    <>
+      {email && name && pictureUrl ? (
+        <>
+          {AUTHBUTTONS.map((val, idx) => {
+            return (
+              <ButtonSidebarAccount
+                name={val.name}
+                svg={val.svg}
+                isShowBorder={val.isShowBorder}
+                key={idx}
+                href={val.href}
+              />
+            );
+          })}
+        </>
+      ) : (
+        <ButtonSidebarAccount
+          key={svgSignIn}
+          svg={svgSignIn}
+          name="Sign In"
+          isShowBorder={true}
+          href={`${VITE_BACKEND_URL}/api/auth/url-login`}
+        />
+      )}
+
+      {UNAUTHBUTTONS.map((val, idx) => {
+        return (
+          <ButtonSidebarAccount
+            name={val.name}
+            svg={val.svg}
+            isShowBorder={val.isShowBorder}
+            key={idx}
+          />
+        );
+      })}
+    </>
+  );
+}
 
 function SidebarAccount() {
   const [states, dispatch] = appStates.useContextStates();
+  const {
+    Auth: { email, name, pictureUrl },
+  } = states;
 
   return (
     <div id="sidebar_account">
@@ -33,44 +105,14 @@ function SidebarAccount() {
           <p>Account</p>
         </div>
       </div>
+      {email && name && pictureUrl ? (
+        <ManageAccount email={email} name={name} pictureUrl={pictureUrl} />
+      ) : null}
+
       <div id="sidebar_account__buttons">
-        <ButtonSidebarAccount
-          key={svgSignIn}
-          svg={svgSignIn}
-          name="Sign In"
-          isShowBorder={true}
-          href={`${VITE_BACKEND_URL}/api/auth/url-login`}
-        />
-        <ButtonSidebarAccount
-          key={svgSettings}
-          svg={svgSettings}
-          name="Settings"
-          isShowBorder={true}
-        />
-        <ButtonSidebarAccount key={svgHelp} svg={svgHelp} name="Help" />
-        <ButtonSidebarAccount
-          key={svgFeedback}
-          svg={svgFeedback}
-          name="Feedback"
-          isShowBorder={true}
-        />
-        <ButtonSidebarAccount
-          key={svgYtMusic}
-          svg={svgYtMusic}
-          name="YouTube Music"
-        />
-        <ButtonSidebarAccount
-          key={svgYtKids}
-          svg={svgYtKids}
-          name="YouTube Kids"
-          isShowBorder={true}
-        />
-        <ButtonSidebarAccount
-          key={svgOpenApp}
-          svg={svgOpenApp}
-          name="Open App"
-        />
+        <ButtonsAuth email={email} name={name} pictureUrl={pictureUrl} />
       </div>
+      <div id="sidebar_account__footer">Privacy Policy • Terms of Service</div>
     </div>
   );
 }
