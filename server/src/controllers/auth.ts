@@ -53,7 +53,7 @@ export const login = async (req: Request, res: Response) => {
 
     const signed = await jwt.sign({ email, name, picture });
 
-    // TODO store refresh token after created account or sign in
+    //TODO store refresh token after created account or sign in
 
     res
       .cookie("access_token", signed, {
@@ -72,4 +72,8 @@ export const login = async (req: Request, res: Response) => {
     logger(module).info(err);
     handleError(err as Error, res);
   }
+};
+
+export const logout = async (_: Request, res: Response) => {
+  res.clearCookie("access_token").redirect(FRONTEND_URL as string);
 };
