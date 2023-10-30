@@ -8,6 +8,6 @@ router.get("/url-login", urlLogin);
 
 router.post("/login", login);
 
-router.get("/logout", decodeAccessToken, logout);
+router.post("/logout", decodeAccessToken, logout);
 
 export default router;

@@ -21,7 +21,10 @@ export const urlLogin = async (req: Request, res: Response) => {
       // TODO Add state for csrf
     });
 
-    res.status(302).redirect(url);
+    res.status(302).json({
+      message: "redirect to google oauth",
+      url: url,
+    });
   } catch (err) {
     logger(module).info(err);
     handleError(err as Error, res);
@@ -62,7 +65,7 @@ export const login = async (req: Request, res: Response) => {
       })
       .status(200)
       .json({
-        msg: "Authenticated",
+        message: "Login Success",
         access_token: signed,
         email,
         name,
@@ -75,5 +78,7 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const logout = async (_: Request, res: Response) => {
-  res.clearCookie("access_token").redirect(FRONTEND_URL as string);
+  res.clearCookie("access_token").status(202).json({
+    message: "Logout Success",
+  });
 };
