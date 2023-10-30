@@ -1,8 +1,9 @@
 interface ButtonAccountProps {
   isShowBorder?: boolean;
-  href?: string;
   name: string;
   svg: string;
+  fn?: (...args: any) => void;
+  disabled?: boolean;
 }
 
 export default ButtonAccountProps;

@@ -1,4 +1,5 @@
 import "./assets/App.css";
+import { useEffect } from "react";
 import Home from "./pages/Home";
 import Watch from "./pages/Watch";
 import GoogleOauth from "./pages/GoogleOauth";
@@ -26,7 +27,10 @@ const router = createBrowserRouter([
 
 function RequestOnce({ handleRequestOnce }: RequestOnceProps) {
   const isDone = useGetProfile();
-  if (isDone) handleRequestOnce(isDone);
+
+  useEffect(() => {
+    if (isDone) handleRequestOnce(isDone);
+  }, []);
   return null;
 }
 
@@ -36,6 +40,9 @@ function App() {
   function handleRequestOnce(isDone: boolean) {
     setIsRequestOnce(isDone);
   }
+  // TODO handle error if server down and show fallback UI for it
+  //* hint: clean all component (RequestOnce and RouterProvider) and show the fallback UI
+  //*       the fallback UI will show if useGetProfile in requestOnce failed (email, pictureurl, name)
   return (
     <ContextProvider.Provider value={appStates.reducer()}>
       {!isRequestOnce ? (

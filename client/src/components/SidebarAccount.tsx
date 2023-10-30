@@ -1,19 +1,25 @@
 import "../assets/components/sidebarAccount.css";
+import { useState } from "react";
 import { appStates } from "../hooks";
 import ButtonSidebarAccount from "./ButtonSidebarAccount";
 import svgSignIn from "../assets/image/signin.svg";
-import { VITE_BACKEND_URL } from "../config/app";
+import { VITE_BACKEND_URL, VITE_NODE_ENV } from "../config/app";
 import { sidebarAccountButtons } from "../constants/index";
+import { ButtonSidebarAccountProps } from "../types";
+import { useNavigate } from "react-router-dom";
+import axios, { AxiosError } from "axios";
 
 const { AUTHBUTTONS, UNAUTHBUTTONS } = sidebarAccountButtons;
 
-type ManageAccountProps = {
+interface ManageAccountProps {
   email: string;
   name: string;
   pictureUrl: string;
-};
+}
 
-type ButtonsAuthProps = ManageAccountProps;
+interface ButtonsProps extends ManageAccountProps {
+  authButtons: ButtonSidebarAccountProps[];
+}
 
 function ManageAccount({ email, name, pictureUrl }: ManageAccountProps) {
   return (
@@ -38,19 +44,41 @@ function ManageAccount({ email, name, pictureUrl }: ManageAccountProps) {
   );
 }
 
-function ButtonsAuth({ email, name, pictureUrl }: ButtonsAuthProps) {
+function Buttons({ email, name, pictureUrl, authButtons }: ButtonsProps) {
+  // const isDone = useRef<boolean>(false);
+  const navigate = useNavigate();
+  const [buttonParams, _] = useState<any[]>([navigate, axios]);
+
+  async function handleSignIn() {
+    try {
+      // this will get to catch due to server using status code 300 - 500
+      // axios only not throw an error if the resopnse code is 200
+      await axios.get(`${VITE_BACKEND_URL}/api/auth/url-login`);
+    } catch (err) {
+      const axiosErr = err as AxiosError;
+      if (axiosErr.response?.status === 302) {
+        const response = axiosErr.response?.data as { [key: string]: any };
+        window.location.href = response.url;
+      }
+      if (VITE_NODE_ENV !== "production") console.log(err);
+    }
+  }
+
   return (
     <>
       {email && name && pictureUrl ? (
         <>
-          {AUTHBUTTONS.map((val, idx) => {
+          {authButtons.map((val, idx) => {
             return (
               <ButtonSidebarAccount
                 name={val.name}
                 svg={val.svg}
                 isShowBorder={val.isShowBorder}
                 key={idx}
-                href={val.href}
+                disabled={val.disabled}
+                fn={() => {
+                  if (val.fn !== undefined) val.fn(...buttonParams);
+                }}
               />
             );
           })}
@@ -61,7 +89,10 @@ function ButtonsAuth({ email, name, pictureUrl }: ButtonsAuthProps) {
           svg={svgSignIn}
           name="Sign In"
           isShowBorder={true}
-          href={`${VITE_BACKEND_URL}/api/auth/url-login`}
+          disabled={false}
+          fn={() => {
+            handleSignIn();
+          }}
         />
       )}
 
@@ -72,6 +103,7 @@ function ButtonsAuth({ email, name, pictureUrl }: ButtonsAuthProps) {
             svg={val.svg}
             isShowBorder={val.isShowBorder}
             key={idx}
+            disabled={val.disabled}
           />
         );
       })}
@@ -81,6 +113,7 @@ function ButtonsAuth({ email, name, pictureUrl }: ButtonsAuthProps) {
 
 function SidebarAccount() {
   const [states, dispatch] = appStates.useContextStates();
+
   const {
     Auth: { email, name, pictureUrl },
   } = states;
@@ -110,7 +143,12 @@ function SidebarAccount() {
       ) : null}
 
       <div id="sidebar_account__buttons">
-        <ButtonsAuth email={email} name={name} pictureUrl={pictureUrl} />
+        <Buttons
+          email={email}
+          name={name}
+          pictureUrl={pictureUrl}
+          authButtons={AUTHBUTTONS}
+        />
       </div>
       <div id="sidebar_account__footer">Privacy Policy • Terms of Service</div>
     </div>

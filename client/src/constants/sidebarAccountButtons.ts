@@ -9,22 +9,51 @@ import svgYourChannel from "../assets/image/yourchannel.svg";
 import svgYtPremium from "../assets/image/ytpremium.svg";
 import svgPurchases from "../assets/image/purchases.svg";
 import svgYourData from "../assets/image/yourdata.svg";
-import { VITE_BACKEND_URL } from "../config/app";
+import svgYtUpload from "../assets/image/ytupload.svg";
+import { ButtonSidebarAccountProps } from "../types/index";
+import { AxiosStatic } from "axios";
+import { VITE_BACKEND_URL, VITE_NODE_ENV } from "../config/app";
+import { NavigateFunction } from "react-router-dom";
 
-const AUTHBUTTONS = [
-  {
-    svg: svgYourChannel,
-    name: "Your Channel",
-  },
+async function signOut(_: NavigateFunction, axios: AxiosStatic) {
+  try {
+    await axios.post(
+      `${VITE_BACKEND_URL}/api/auth/logout`,
+      {},
+      { withCredentials: true }
+    );
+  } catch (err) {
+    if (VITE_NODE_ENV !== "production") console.error(err);
+  } finally {
+    window.location.href = "/";
+  }
+}
+
+async function uploadVideo(_: NavigateFunction, __: AxiosStatic) {
+  console.log("Open pop up upload video");
+}
+
+const AUTHBUTTONS: ButtonSidebarAccountProps[] = [
   {
     svg: svgSignIn,
     name: "Switch Account",
   },
   {
+    svg: svgYourChannel,
+    name: "Your Channel",
+  },
+  {
+    svg: svgYtUpload,
+    name: "Upload Video",
+    disabled: false,
+    fn: uploadVideo,
+  },
+  {
     svg: svgOpenApp,
     name: "Sign Out",
     isShowBorder: true,
-    href: `${VITE_BACKEND_URL}/api/auth/logout`,
+    disabled: false,
+    fn: signOut,
   },
   {
     svg: svgYtPremium,
@@ -41,7 +70,7 @@ const AUTHBUTTONS = [
   },
 ];
 
-const UNAUTHBUTTONS = [
+const UNAUTHBUTTONS: ButtonSidebarAccountProps[] = [
   {
     svg: svgSettings,
     name: "Settings",
