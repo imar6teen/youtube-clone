@@ -10,12 +10,16 @@ import svgYtPremium from "../assets/image/ytpremium.svg";
 import svgPurchases from "../assets/image/purchases.svg";
 import svgYourData from "../assets/image/yourdata.svg";
 import svgYtUpload from "../assets/image/ytupload.svg";
-import { ButtonSidebarAccountProps } from "../types/index";
+import { ButtonSidebarAccountProps, AppStatesProps as P } from "../types/index";
 import { AxiosStatic } from "axios";
 import { VITE_BACKEND_URL, VITE_NODE_ENV } from "../config/app";
 import { NavigateFunction } from "react-router-dom";
 
-async function signOut(_: NavigateFunction, axios: AxiosStatic) {
+async function signOut(
+  _: NavigateFunction,
+  axios: AxiosStatic,
+  ___: React.Dispatch<P.Actions>
+) {
   try {
     await axios.post(
       `${VITE_BACKEND_URL}/api/auth/logout`,
@@ -29,8 +33,13 @@ async function signOut(_: NavigateFunction, axios: AxiosStatic) {
   }
 }
 
-async function uploadVideo(_: NavigateFunction, __: AxiosStatic) {
+async function uploadVideo(
+  _: NavigateFunction,
+  __: AxiosStatic,
+  dispatch: React.Dispatch<P.Actions>
+) {
   console.log("Open pop up upload video");
+  dispatch({ type: "togglePopUpUploadVideo" });
 }
 
 const AUTHBUTTONS: ButtonSidebarAccountProps[] = [
@@ -47,6 +56,7 @@ const AUTHBUTTONS: ButtonSidebarAccountProps[] = [
     name: "Upload Video",
     disabled: false,
     fn: uploadVideo,
+    isDebounce: false,
   },
   {
     svg: svgOpenApp,

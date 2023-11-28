@@ -4,6 +4,7 @@ interface ButtonAccountProps {
   svg: string;
   fn?: (...args: any) => void;
   disabled?: boolean;
+  isDebounce?: boolean;
 }
 
 export default ButtonAccountProps;

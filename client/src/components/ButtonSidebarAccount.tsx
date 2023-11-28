@@ -7,15 +7,18 @@ function ButtonAccount({
   name,
   svg,
   disabled = true,
+  isDebounce = true,
   fn,
 }: ButtonSidebarAccountProps) {
+  const anotherFn = () => {
+    if (fn !== undefined) fn();
+  };
+  const btnFunction = isDebounce ? debounce(anotherFn, 500) : anotherFn;
   return (
     <button
       className={`button_sidebar_account ${isShowBorder ? "bordered" : ""}`}
       disabled={disabled}
-      onClick={debounce(() => {
-        if (fn !== undefined) fn();
-      }, 500)}
+      onClick={btnFunction}
     >
       <div className="button_sidebar_account__icon">
         <img src={svg} alt={name} />

@@ -45,7 +45,7 @@ div#nav__upper div#nav__upper__search_account button#nav__upper__search_account_
 }
 
 div#nav__lower{
-    border: .05rem rgba(0, 0, 0, .1) solid;
+    border: .05rem rgba(0, 0, 0, .5) solid;
     justify-content: start;
 }
 

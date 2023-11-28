@@ -45,9 +45,9 @@ function ManageAccount({ email, name, pictureUrl }: ManageAccountProps) {
 }
 
 function Buttons({ email, name, pictureUrl, authButtons }: ButtonsProps) {
-  // const isDone = useRef<boolean>(false);
+  const [__, dispatch] = appStates.useContextStates();
   const navigate = useNavigate();
-  const [buttonParams, _] = useState<any[]>([navigate, axios]);
+  const [buttonParams, _] = useState<any[]>([navigate, axios, dispatch]);
 
   async function handleSignIn() {
     try {
@@ -79,6 +79,7 @@ function Buttons({ email, name, pictureUrl, authButtons }: ButtonsProps) {
                 fn={() => {
                   if (val.fn !== undefined) val.fn(...buttonParams);
                 }}
+                isDebounce={val.isDebounce}
               />
             );
           })}
@@ -104,6 +105,7 @@ function Buttons({ email, name, pictureUrl, authButtons }: ButtonsProps) {
             isShowBorder={val.isShowBorder}
             key={idx}
             disabled={val.disabled}
+            isDebounce={val.isDebounce}
           />
         );
       })}

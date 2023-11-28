@@ -1,34 +1,16 @@
 import { useReducer, createContext, useContext } from "react";
+import { AppStatesProps as P } from "../types";
 
-interface PopUpAccountStates {
-  isClosed: boolean;
-}
-
-interface AuthStates {
-  email: string;
-  name: string;
-  pictureUrl: string;
-}
-
-interface States {
-  PopAccount: PopUpAccountStates;
-  Auth: AuthStates;
-}
-
-type Actions =
-  | { type: "togglePopUpAccount" }
-  | { type: "fillAuth"; value: AuthStates };
-// | {} fill it when add new state
-
-type AfterReducer = [States, React.Dispatch<Actions>];
+type AfterReducer = [P.States, React.Dispatch<P.Actions>];
 
 // Create Reducer
-const stateReducer = (state: States, action: Actions): States => {
+const stateReducer = (state: P.States, action: P.Actions): P.States => {
   switch (action.type) {
     case "togglePopUpAccount":
       return {
         PopAccount: { isClosed: !state.PopAccount.isClosed },
         Auth: state.Auth,
+        PopUploadVideo: state.PopUploadVideo,
       };
     case "fillAuth":
       return {
@@ -38,15 +20,23 @@ const stateReducer = (state: States, action: Actions): States => {
           name: action.value.name,
           pictureUrl: action.value.pictureUrl,
         },
+        PopUploadVideo: state.PopUploadVideo,
+      };
+    case "togglePopUpUploadVideo":
+      return {
+        PopAccount: state.PopAccount,
+        Auth: state.Auth,
+        PopUploadVideo: { isClosed: !state.PopUploadVideo.isClosed },
       };
     default:
       throw new Error("unknown action");
   }
 };
 
-const initialStates: States = {
+const initialStates: P.States = {
   PopAccount: { isClosed: true },
   Auth: { email: "", name: "", pictureUrl: "" },
+  PopUploadVideo: { isClosed: true },
 };
 
 const useReducerStates = () => useReducer(stateReducer, initialStates);
@@ -61,13 +51,7 @@ const ContextProviderStates = createContext<AfterReducer>([
 
 const useContextStates = () => useContext(ContextProviderStates);
 
-type ImportObject = {
-  reducer: () => AfterReducer;
-  ContextProvider: React.Context<AfterReducer>;
-  useContextStates: () => AfterReducer;
-};
-
-const importObject: ImportObject = {
+const importObject = {
   reducer: useReducerStates,
   ContextProvider: ContextProviderStates,
   useContextStates: useContextStates,

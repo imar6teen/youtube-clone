@@ -30,7 +30,7 @@ function RequestOnce({ handleRequestOnce }: RequestOnceProps) {
 
   useEffect(() => {
     if (isDone) handleRequestOnce(isDone);
-  }, []);
+  }, [isDone]);
   return null;
 }
 
