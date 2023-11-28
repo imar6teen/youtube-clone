@@ -1,62 +1,18 @@
-div#upload_video_modal{
-    position: absolute;
-    top: -6rem;
-    z-index: 11;
-    height: 100vh;
-    width: 100vw;
-    background-color: rgba(0, 0, 0, .5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-div#upload_video_modal div#upload_video_modal__modal {
-    background-color: white;
-    width: 80%;
-    height: 80%;
-}
-
-div#upload_video_modal div#upload_video_modal__modal div#upload_video_modal__modal__header{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid rgba(0, 0, 0, .1);
-}
-
-div#upload_video_modal div#upload_video_modal__modal div#upload_video_modal__modal__header div#upload_video_modal__modal__header__desc,
-div#upload_video_modal div#upload_video_modal__modal div#upload_video_modal__modal__header div#upload_video_modal__modal__header__close{
-    padding: 4px;
-}
-
-div#upload_video_modal div#upload_video_modal__modal div#upload_video_modal__modal__body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 60%;
-}
-
-div#upload_video_modal div#upload_video_modal__modal div#upload_video_modal__modal__body div {
-    text-align: center;
-}
-
-div#upload_video_modal div#upload_video_modal__modal div#upload_video_modal__modal__body div#upload_video_modal__modal__body__icon img{
+div#upload_video_modal__icon img{
     width: 50%;
     height: 50%;
 }
 
-div#upload_video_modal div#upload_video_modal__modal div#upload_video_modal__modal__body div#upload_video_modal__modal__body__button{
+div#upload_video_modal__button{
     margin-top: 1.25rem;
 }
-div#upload_video_modal div#upload_video_modal__modal div#upload_video_modal__modal__body div#upload_video_modal__modal__body__button input{
+div#upload_video_modal__button input{
     opacity: 0;
     position: absolute;
     z-index: -1;
 }
 
-div#upload_video_modal div#upload_video_modal__modal div#upload_video_modal__modal__body div#upload_video_modal__modal__body__button label{
+div#upload_video_modal__button label{
     display: block;
     padding: .625rem;
     background-color: #065fd4;
