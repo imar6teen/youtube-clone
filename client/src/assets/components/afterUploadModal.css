@@ -1,0 +1,32 @@
+form#after_upload_modal {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 100px;
+}
+
+form#after_upload_modal textarea {
+    resize: none;
+    width: 100%;
+    height: 100%;
+}
+
+form#after_upload_modal div#after_upload_modal__preview {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+form#after_upload_modal div#after_upload_modal__preview div#after_upload_modal__preview__video{
+    width: 60%;
+    height: 60%;
+}
+
+form#after_upload_modal div#after_upload_modal__preview div#after_upload_modal__preview__video video{
+    width: 100%;
+    height: 100%;
+}

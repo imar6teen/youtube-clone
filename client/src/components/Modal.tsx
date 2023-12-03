@@ -7,7 +7,7 @@ function Modal({ children, closeFn, header }: ModalProps) {
       <div className="modal__modal">
         <div className="modal__modal__header">
           <div className="modal__modal__header__desc">
-            <h3>{header}</h3>
+            <h3 ref={header}></h3>
           </div>
           <div className="modal__modal__header__close">
             <button onClick={closeFn}>

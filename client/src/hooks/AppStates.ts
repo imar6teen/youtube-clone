@@ -4,29 +4,58 @@ import { AppStatesProps as P } from "../types";
 type AfterReducer = [P.States, React.Dispatch<P.Actions>];
 
 // Create Reducer
-const stateReducer = (state: P.States, action: P.Actions): P.States => {
+const stateReducer = (s: P.States, action: P.Actions): P.States => {
   switch (action.type) {
     case "togglePopUpAccount":
       return {
-        PopAccount: { isClosed: !state.PopAccount.isClosed },
-        Auth: state.Auth,
-        PopUploadVideo: state.PopUploadVideo,
+        PopAccount: { isClosed: !s.PopAccount.isClosed },
+        Auth: s.Auth,
+        PopUploadVideo: s.PopUploadVideo,
+        PopUpAfterUpload: s.PopUpAfterUpload,
+        isModalClosed:
+          !s.PopAccount.isClosed &&
+          s.PopUploadVideo.isClosed &&
+          s.PopUpAfterUpload.isClosed
+            ? true
+            : false,
       };
     case "fillAuth":
       return {
-        PopAccount: state.PopAccount,
+        PopAccount: s.PopAccount,
         Auth: {
           email: action.value.email,
           name: action.value.name,
           pictureUrl: action.value.pictureUrl,
         },
-        PopUploadVideo: state.PopUploadVideo,
+        PopUploadVideo: s.PopUploadVideo,
+        PopUpAfterUpload: s.PopUpAfterUpload,
+        isModalClosed: s.isModalClosed,
       };
     case "togglePopUpUploadVideo":
       return {
-        PopAccount: state.PopAccount,
-        Auth: state.Auth,
-        PopUploadVideo: { isClosed: !state.PopUploadVideo.isClosed },
+        PopAccount: s.PopAccount,
+        Auth: s.Auth,
+        PopUploadVideo: { isClosed: !s.PopUploadVideo.isClosed },
+        PopUpAfterUpload: s.PopUpAfterUpload,
+        isModalClosed:
+          s.PopAccount.isClosed &&
+          !s.PopUploadVideo.isClosed &&
+          s.PopUpAfterUpload.isClosed
+            ? true
+            : false,
+      };
+    case "togglePopUpAfterUpload":
+      return {
+        PopAccount: s.PopAccount,
+        Auth: s.Auth,
+        PopUploadVideo: s.PopUploadVideo,
+        PopUpAfterUpload: { isClosed: !s.PopUpAfterUpload.isClosed },
+        isModalClosed:
+          s.PopAccount.isClosed &&
+          s.PopUploadVideo.isClosed &&
+          !s.PopUpAfterUpload.isClosed
+            ? true
+            : false,
       };
     default:
       throw new Error("unknown action");
@@ -35,8 +64,10 @@ const stateReducer = (state: P.States, action: P.Actions): P.States => {
 
 const initialStates: P.States = {
   PopAccount: { isClosed: true },
-  Auth: { email: "", name: "", pictureUrl: "" },
   PopUploadVideo: { isClosed: true },
+  PopUpAfterUpload: { isClosed: true },
+  Auth: { email: "", name: "", pictureUrl: "" },
+  isModalClosed: true,
 };
 
 const useReducerStates = () => useReducer(stateReducer, initialStates);

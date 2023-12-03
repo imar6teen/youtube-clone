@@ -38,7 +38,6 @@ async function uploadVideo(
   __: AxiosStatic,
   dispatch: React.Dispatch<P.Actions>
 ) {
-  console.log("Open pop up upload video");
   dispatch({ type: "togglePopUpUploadVideo" });
 }
 

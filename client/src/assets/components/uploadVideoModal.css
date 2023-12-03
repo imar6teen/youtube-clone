@@ -1,6 +1,14 @@
+div#upload_video_modal {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 80%;
+    height: 80%;
+}
 div#upload_video_modal__icon img{
-    width: 50%;
-    height: 50%;
+    width: 30%;
+    height: 30%;
 }
 
 div#upload_video_modal__button{

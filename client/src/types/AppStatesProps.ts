@@ -7,6 +7,10 @@ namespace AppStatesProps {
     isClosed: boolean;
   }
 
+  export interface PopUpAfterUploadStates {
+    isClosed: boolean;
+  }
+
   export interface AuthStates {
     email: string;
     name: string;
@@ -16,12 +20,15 @@ namespace AppStatesProps {
   export interface States {
     PopAccount: PopUpAccountStates;
     PopUploadVideo: PopUpUploadVideoStates;
+    PopUpAfterUpload: PopUpAfterUploadStates;
     Auth: AuthStates;
+    isModalClosed: boolean;
   }
 
   export type Actions =
     | { type: "togglePopUpAccount" }
     | { type: "togglePopUpUploadVideo" }
+    | { type: "togglePopUpAfterUpload" }
     | { type: "fillAuth"; value: AuthStates };
   // | {} fill it when add new state
 }

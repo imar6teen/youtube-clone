@@ -1,3 +1,7 @@
 div#body {
     margin-top: 6rem;
 }
+
+div#body.stopscroll{
+    position: fixed;
+}
