@@ -23,6 +23,8 @@ function Home() {
 
       setUploadProgress(percentage);
     },
+    withCredentials: true,
+    headers: { "content-type": "multipart/form-data" },
   };
 
   // upload video

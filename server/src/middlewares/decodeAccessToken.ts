@@ -4,10 +4,11 @@ import parseAccessToken from "../util/parseAccessToken";
 import handleError from "../util/handleError";
 import logger from "../util/winstonLog";
 import { NextFunction, Request, Response } from "express";
+import { ExtendsResponse } from "../types";
 
 const decodeAccessToken = async (
   req: Request,
-  res: Response,
+  res: ExtendsResponse,
   next: NextFunction
 ) => {
   try {

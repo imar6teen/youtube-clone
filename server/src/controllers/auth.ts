@@ -1,12 +1,13 @@
-import { FRONTEND_URL } from "../config/app";
+import { FRONTEND_URL, JWT_MAX_AGE } from "../config/app";
 import { googleoauth2api, oauth2client, scopes } from "../config/googleOauth";
 import { Request, Response } from "express";
 import jwt from "../util/jwtpromisify";
 import parseAccessToken from "../util/parseAccessToken";
 import handleError, { HTTPError } from "../util/handleError";
 import logger from "../util/winstonLog";
+import { ExtendsResponse } from "../types";
 
-export const urlLogin = async (req: Request, res: Response) => {
+export const urlLogin = async (req: Request, res: ExtendsResponse) => {
   try {
     // Validate jwt
     let token = parseAccessToken(req);
@@ -31,7 +32,7 @@ export const urlLogin = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: ExtendsResponse) => {
   try {
     const { code } = req.query;
 
@@ -61,7 +62,7 @@ export const login = async (req: Request, res: Response) => {
     res
       .cookie("access_token", signed, {
         httpOnly: true,
-        maxAge: 1000 * 60 * 5,
+        maxAge: 1000 * 60 * parseInt(JWT_MAX_AGE as string),
       })
       .status(200)
       .json({

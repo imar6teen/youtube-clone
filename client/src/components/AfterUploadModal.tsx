@@ -64,6 +64,7 @@ function AfterUploadModal({
     axios
       .put(`${VITE_BACKEND_URL}/api/v1/video`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
       })
       .then(() => {
         alert("change metadata success. Capek raw css :')");

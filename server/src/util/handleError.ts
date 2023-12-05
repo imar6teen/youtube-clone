@@ -4,6 +4,7 @@ import {
   NotBeforeError,
   TokenExpiredError,
 } from "jsonwebtoken";
+import { ExtendsResponse } from "../types";
 
 type HTTPErrorParams = {
   message: string;
@@ -76,7 +77,7 @@ function errorFactory(err: Error): HTTPError {
     });
 }
 
-function handleError(err: Error, res: Response) {
+function handleError(err: Error, res: ExtendsResponse) {
   let errInstance: HTTPError = errorFactory(err);
   errInstance.handle(res);
 }

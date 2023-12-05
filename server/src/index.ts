@@ -1,4 +1,4 @@
-import { PORT } from "./config/app";
+import { PORT, RATE_LIMIT_REFRESH } from "./config/app";
 import http from "http";
 import fs from "fs/promises";
 import path from "path";
@@ -8,6 +8,30 @@ import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import databaseConnect from "./config/database";
+import mongoose from "mongoose";
+
+async function shutdown(server: http.Server) {
+  const shut = () => {
+    server.close((err) => {
+      if (err) {
+        console.error(err);
+        process.exit(81);
+      }
+      console.log("[SERVER] server is terminated");
+      mongoose.disconnect();
+      process.exit();
+    });
+  };
+  process.on("SIGINT", () => {
+    console.log("[SERVER] process received SIGINT");
+    shut();
+  });
+  process.on("SIGTERM", () => {
+    console.log("[SERVER] process received SIGTERM");
+    shut();
+  });
+}
 
 async function main() {
   const app = express();
@@ -23,7 +47,7 @@ async function main() {
   app.use(helmet());
   app.use(
     rateLimit({
-      windowMs: 5 * 60 * 1000, // 5 minutes
+      windowMs: parseInt(RATE_LIMIT_REFRESH as string) * 60 * 1000, // 5 minutes
       limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
       standardHeaders: "draft-6", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
       legacyHeaders: true, // Disable the `X-RateLimit-*` headers
@@ -37,7 +61,7 @@ async function main() {
     })
   );
 
-  app.get("/ping", (_, res) => res.send("healthy"));
+  app.get("/ping", async (_, res) => res.send("healthy"));
 
   const routeFiles = await fs.readdir(path.resolve(__dirname, "routes"));
 
@@ -50,6 +74,10 @@ async function main() {
   server.listen(PORT, () => {
     console.log(`[Server] Server listening on port : ${PORT}`);
   });
+
+  shutdown(server);
 }
 
-main();
+databaseConnect().then(() => {
+  main();
+});
