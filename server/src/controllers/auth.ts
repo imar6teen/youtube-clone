@@ -1,4 +1,4 @@
-import { FRONTEND_URL, JWT_MAX_AGE } from "../config/app";
+import { FRONTEND_URL, JWT_MAX_AGE, LOCAL_STORAGE } from "../config/app";
 import { googleoauth2api, oauth2client, scopes } from "../config/googleOauth";
 import { Request, Response } from "express";
 import jwt from "../util/jwtpromisify";
@@ -6,11 +6,16 @@ import parseAccessToken from "../util/parseAccessToken";
 import handleError, { HTTPError } from "../util/handleError";
 import logger from "../util/winstonLog";
 import { ExtendsResponse } from "../types";
+import { Users } from "../models";
+import HttpStatusCode from "../constants/StatusCode";
+import fs from "fs";
+import path from "path";
 
 export const urlLogin = async (req: Request, res: ExtendsResponse) => {
   try {
     // Validate jwt
     let token = parseAccessToken(req);
+    // it should if(token && await jwt.verify(token))
     if (token)
       if (await jwt.verify(token)) return res.redirect(FRONTEND_URL as string);
 
@@ -22,7 +27,7 @@ export const urlLogin = async (req: Request, res: ExtendsResponse) => {
       // TODO Add state for csrf
     });
 
-    res.status(302).json({
+    res.status(HttpStatusCode.FOUND_302).json({
       message: "redirect to google oauth",
       url: url,
     });
@@ -37,10 +42,10 @@ export const login = async (req: Request, res: ExtendsResponse) => {
     const { code } = req.query;
 
     if (!code)
-      return new HTTPError({
+      throw new HTTPError({
         message: "Code query needed",
         name: "CodeQueryError",
-        status: 400,
+        status: HttpStatusCode.BAD_REQUEST_400,
       });
 
     const { tokens } = await oauth2client.getToken(code as string);
@@ -55,9 +60,28 @@ export const login = async (req: Request, res: ExtendsResponse) => {
       data: { email, name, picture },
     } = result;
 
-    const signed = await jwt.sign({ email, name, picture });
+    let users = await Users.exists({ email });
+    if (!users) {
+      const newUsers = new Users({ email });
+      await newUsers.save();
+      users = { _id: newUsers._id };
+    }
 
-    //TODO store refresh token after created account or sign in
+    const signed = await jwt.sign({ email, name, picture, id: users._id });
+
+    if (
+      !fs.existsSync(
+        path.join(LOCAL_STORAGE, "videos", users._id.toString())
+      ) &&
+      !fs.existsSync(
+        path.join(LOCAL_STORAGE, "thumbnails", users._id.toString())
+      )
+    ) {
+      fs.mkdirSync(path.join(LOCAL_STORAGE, "videos", users._id.toString()));
+      fs.mkdirSync(
+        path.join(LOCAL_STORAGE, "thumbnails", users._id.toString())
+      );
+    }
 
     res
       .cookie("access_token", signed, {

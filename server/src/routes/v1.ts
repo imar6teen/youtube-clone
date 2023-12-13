@@ -1,14 +1,6 @@
 import express from "express";
-import { profile, uploadVideo } from "../controllers/v1";
+import { profile, updateMetadataVideo, uploadVideo } from "../controllers/v1";
 import decodeAccessToken from "../middlewares/decodeAccessToken";
-import busboy from "busboy";
-import logger from "../util/winstonLog";
-import { randomFillSync } from "crypto";
-import path from "path";
-import fs from "fs";
-import handleError from "../util/handleError";
-import mongoose from "mongoose";
-import ExtendsResponse from "../types/ExtendsResponse";
 
 const router = express.Router();
 
@@ -24,6 +16,6 @@ router
   // where link for user to share it
   .post(uploadVideo)
   // update metadata of a video
-  .put((req, res) => {});
+  .put(updateMetadataVideo);
 
 export default router;

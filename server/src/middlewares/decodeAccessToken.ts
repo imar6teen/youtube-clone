@@ -16,9 +16,9 @@ const decodeAccessToken = async (
 
     const decoded = await jwt.verify(token);
 
-    const { email, name, picture } = decoded as JwtPayload;
+    const { email, name, picture, id } = decoded as JwtPayload;
 
-    res.locals.user = { email, name, picture };
+    res.locals.user = { email, name, picture, id };
     next();
   } catch (err) {
     logger(module).info(err);

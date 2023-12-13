@@ -14,7 +14,12 @@ export const JWT_MAX_AGE = process.env.JWT_MAX_AGE;
 export const RATE_LIMIT_REFRESH = process.env.RATE_LIMIT_REFRESH;
 
 // Load google oauth key
-const pathFile = path.resolve(__dirname, "..", "..", "oauth.json");
+const pathFile = path.resolve(
+  __dirname,
+  "..",
+  "..",
+  process.env.GOOGLE_OAUTH_KEYS as string
+);
 const data = fs.readFileSync(pathFile, { encoding: "utf-8" });
 const jsonData = JSON.parse(data);
 
@@ -31,3 +36,10 @@ export const MONGO_CERT = path.join(
   process.env.MONGO_CERT as string
 );
 export const MONGO_URL = process.env.MONGO_URL;
+export const MONGO_DB = process.env.MONGO_DB;
+
+// STORAGES
+export const LOCAL_STORAGE = path.join(
+  process.cwd(),
+  process.env.LOCAL_STORAGE as string
+);
