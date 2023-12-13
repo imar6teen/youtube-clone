@@ -4,7 +4,11 @@ import { Modal } from ".";
 import { appStates } from "../hooks";
 import { useRef, useEffect, FormEvent } from "react";
 import axios from "axios";
-import { VITE_BACKEND_URL, VITE_NODE_ENV } from "../config/app";
+import {
+  VITE_BACKEND_URL,
+  VITE_FRONTEND_URL,
+  VITE_NODE_ENV,
+} from "../config/app";
 
 type TempForm = {
   title: HTMLTextAreaElement;
@@ -25,13 +29,6 @@ function AfterUploadModal({
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const headerRef = useRef<HTMLHeadingElement>(null);
 
-  useEffect(() => {
-    if (titleRef.current !== null) {
-      const tempTitleRef = titleRef.current;
-      tempTitleRef.value = video?.name as string;
-    }
-  }, []);
-
   const changeHeader = () => {
     if (headerRef.current !== null) {
       const currTitle = titleRef.current?.value as string;
@@ -41,6 +38,11 @@ function AfterUploadModal({
   };
 
   useEffect(() => {
+    if (titleRef.current !== null) {
+      const tempTitleRef = titleRef.current;
+      tempTitleRef.value = video?.name as string;
+    }
+
     if (titleRef.current !== null) {
       titleRef.current.addEventListener("change", changeHeader);
     }
@@ -53,21 +55,25 @@ function AfterUploadModal({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let target = e.target as unknown as TempForm;
-    const formData = new FormData();
-    formData.append("title", target.title.value);
-    formData.append("description", target.description.value);
     let files = target.thumbnail.files as FileList;
-    formData.append("thumbnail", files[0]);
-    formData.append("visibility", target.visibility.value);
-    formData.append("id", uploadResponse?.data.id);
 
     axios
-      .put(`${VITE_BACKEND_URL}/api/v1/video`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      })
+      .put(
+        `${VITE_BACKEND_URL}/api/v1/video`,
+        {
+          id: uploadResponse?.data.video_id,
+          title: target.title.value,
+          description: target.description.value,
+          thumbnail: files.length !== 0 ? files[0] : null,
+        },
+        {
+          headers: { "Content-Type": "multipart/form-data", Accept: "*/*" },
+          withCredentials: true,
+        }
+      )
       .then(() => {
         alert("change metadata success. Capek raw css :')");
+        dispatch({ type: "togglePopUpAfterUpload" });
       })
       .catch((err) => {
         if (VITE_NODE_ENV !== "production") console.error(err);
@@ -95,8 +101,10 @@ function AfterUploadModal({
               <span>Link Video</span>
               <br />
               {uploadResponse?.data ? (
-                <a href={uploadResponse?.data.link}>
-                  {uploadResponse?.data.link}
+                <a
+                  href={`${VITE_FRONTEND_URL}/video/${uploadResponse?.data.video_id}`}
+                >
+                  {VITE_FRONTEND_URL}/video/{uploadResponse?.data.video_id}
                 </a>
               ) : (
                 "-"
@@ -139,30 +147,10 @@ function AfterUploadModal({
             type="file"
             name="thumbnail"
             id="thumbnail"
+            accept="image/jpg, image/png"
             style={{ position: "absolute", opacity: 0 }}
           />
           <label htmlFor="thumbnail">Upload</label>
-        </div>
-        <div id="after_upload_modal__visibility">
-          <div id="after_upload_modal__visibility__header">
-            <h2>Visibility</h2>
-          </div>
-          <div id="after_upload_modal__visibility__body">
-            <label htmlFor="private-visibility">Private</label>
-            <input
-              type="radio"
-              name="visibility"
-              value={"Private"}
-              id="private-visibility"
-            />
-            <label htmlFor="public-visibility">Public</label>
-            <input
-              type="radio"
-              name="visibility"
-              value={"Public"}
-              id="public-visibility"
-            />
-          </div>
         </div>
         <div id="after_upload_modal__upload">
           <span>{uploadProgress}</span>

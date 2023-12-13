@@ -3,7 +3,11 @@ import "../assets/pages/home.css";
 import { SidebarAccount, Body, Footer, Header } from "../components";
 import { UploadVideoModal } from "../components/";
 import { appStates } from "../hooks";
-import axios, { AxiosProgressEvent, AxiosResponse } from "axios";
+import axios, {
+  AxiosProgressEvent,
+  AxiosResponse,
+  AxiosRequestConfig,
+} from "axios";
 import { VITE_BACKEND_URL } from "../config/app";
 import AfterUploadModal from "../components/AfterUploadModal";
 
@@ -14,8 +18,8 @@ function Home() {
   const [uploadResponse, setUploadResponse] =
     useState<AxiosResponse<any, any>>();
 
-  const options = {
-    onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+  const options: AxiosRequestConfig<FormData | undefined> = {
+    onDownloadProgress: (progressEvent: AxiosProgressEvent) => {
       const { loaded, total } = progressEvent;
       if (total === undefined) return;
 
