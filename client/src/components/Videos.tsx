@@ -1,28 +1,47 @@
+import { Link } from "react-router-dom";
 import "../assets/components/videos.css";
-import thumbnail from "../assets/image/thumbnailex1.jpg";
-import profilePicture from "../assets/image/pfp.jpg";
+import { VITE_BACKEND_URL } from "../config/app";
+// this thumbnail and profilePicture for example only. it constant
+// import thumbnail from "../assets/image/thumbnailex1.jpg";
+// import profilePicture from "../assets/image/pfp.jpg";
+import { VideosFormat } from "../types";
+import humanizeDuration from "../utils/humanizeDuration";
+import timeSince from "../utils/timeSince";
 
-function Videos() {
+interface Props {
+  prop: VideosFormat;
+}
+
+function Videos(props: Props) {
+  const { createdAt, duration, likes, name, thumbnail, users_id, videos_id } =
+    props.prop;
+  const thumbnailName = thumbnail.split(".")[0];
   return (
-    <div className="video">
+    <Link to={`/watch/${videos_id}`} className="video">
       <div className="video__thumbnail">
-        <img src={thumbnail} alt="Thumbnail" />
+        <img
+          src={`${VITE_BACKEND_URL}/static/${users_id._id}/${thumbnailName}/${thumbnail}`}
+          alt="Thumbnail"
+        />
         <div className="video__thumbnail__time">
           <div className="video__thumbnail__time__time">
-            <p>4:32:33</p>
+            <p>{humanizeDuration(duration)}</p>
           </div>
         </div>
       </div>
       <div className="video__desc">
         <div className="video__desc__profile_picture">
-          <img src={profilePicture} alt="pfp" />
+          <img src={users_id.image} alt="pfp" />
         </div>
         <div className="video__desc__description">
           <div className="video__desc__description__video_name">
-            <p>GARASI - HILANG (Performance Video)</p>
+            <p>{name}</p>
           </div>
           <div className="video__desc__description__channel_status">
-            <p>GinoMachino • 6.2M views • 7 months ago</p>
+            <p>
+              {users_id.name} • {likes} likes • {timeSince(new Date(createdAt))}{" "}
+              ago
+            </p>
           </div>
         </div>
         <div className="video__desc__triple_dots">
@@ -37,7 +56,7 @@ function Videos() {
           </svg>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

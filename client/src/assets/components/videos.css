@@ -3,18 +3,22 @@
     height: 24.375rem;
 } */
 
-div.video img {
+a.video{
+    color: #000
+}
+
+a.video img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-div.video div.video__thumbnail {
+a.video div.video__thumbnail {
     position: relative;
     height: 13.75rem;
 }
 
-div.video div.video__thumbnail div.video__thumbnail__time {
+a.video div.video__thumbnail div.video__thumbnail__time {
     position: absolute;
     color: white;
     bottom:4px;
@@ -28,27 +32,27 @@ div.video div.video__thumbnail div.video__thumbnail__time {
     border-radius: 20%;
 }
 
-div.video div.video__desc {
+a.video div.video__desc {
     display: flex;
     justify-content: space-between;
     padding: .7rem .5rem 1rem .75rem;
 }
 
-div.video div.video__desc div.video__desc__profile_picture {
+a.video div.video__desc div.video__desc__profile_picture {
     width: 2.5rem;
     height: 2.5rem;
 }
 
-div.video div.video__desc div.video__desc__profile_picture img {
+a.video div.video__desc div.video__desc__profile_picture img {
     border-radius: 50%;
 }
 
-div.video div.video__desc div.video__desc__description{
+a.video div.video__desc div.video__desc__description{
     padding: 0 .5rem;
     width: 18.75rem;
 }
 
-div.video div.video__desc div.video__desc__description div.video__desc__description__video_name{
+a.video div.video__desc div.video__desc__description div.video__desc__description__video_name{
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -59,13 +63,13 @@ div.video div.video__desc div.video__desc__description div.video__desc__descript
     line-height: 1.3rem;
 }
 
-div.video div.video__desc div.video__desc__description div.video__desc__description__channel_status{
+a.video div.video__desc div.video__desc__description div.video__desc__description__channel_status{
     font-size: .74rem;
     color: darkgray;
 }
 
 
 
-div.video div.video__desc div.video__desc__triple_dots {
+a.video div.video__desc div.video__desc__triple_dots {
     padding: .375rem .375rem 0 0;
 }

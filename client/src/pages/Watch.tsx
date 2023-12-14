@@ -1,10 +1,11 @@
+import { Navbar } from "../components";
 
 function Watch() {
   return (
     <div id="watch">
-        <h1>Watch</h1>
+      <Navbar />
     </div>
-  )
+  );
 }
 
-export default Watch
+export default Watch;

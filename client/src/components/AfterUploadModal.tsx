@@ -9,6 +9,7 @@ import {
   VITE_FRONTEND_URL,
   VITE_NODE_ENV,
 } from "../config/app";
+import { Link } from "react-router-dom";
 
 type TempForm = {
   title: HTMLTextAreaElement;
@@ -72,8 +73,8 @@ function AfterUploadModal({
         }
       )
       .then(() => {
-        alert("change metadata success. Capek raw css :')");
         dispatch({ type: "togglePopUpAfterUpload" });
+        // alert("change metadata success. Capek raw css :')");
       })
       .catch((err) => {
         if (VITE_NODE_ENV !== "production") console.error(err);
@@ -101,11 +102,11 @@ function AfterUploadModal({
               <span>Link Video</span>
               <br />
               {uploadResponse?.data ? (
-                <a
-                  href={`${VITE_FRONTEND_URL}/video/${uploadResponse?.data.video_id}`}
+                <Link
+                  to={`${VITE_FRONTEND_URL}/watch/${uploadResponse?.data.video_id}`}
                 >
-                  {VITE_FRONTEND_URL}/video/{uploadResponse?.data.video_id}
-                </a>
+                  {VITE_FRONTEND_URL}/watch/{uploadResponse?.data.video_id}
+                </Link>
               ) : (
                 "-"
               )}
