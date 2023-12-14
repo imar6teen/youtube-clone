@@ -62,10 +62,12 @@ export const login = async (req: Request, res: ExtendsResponse) => {
 
     let users = await Users.exists({ email });
     if (!users) {
-      const newUsers = new Users({ email });
+      const newUsers = new Users({ email, image: picture, name });
       await newUsers.save();
       users = { _id: newUsers._id };
     }
+
+    await Users.updateOne({ _id: users._id }, { image: picture, name });
 
     const signed = await jwt.sign({ email, name, picture, id: users._id });
 

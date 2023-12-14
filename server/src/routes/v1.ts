@@ -1,8 +1,16 @@
 import express from "express";
-import { profile, updateMetadataVideo, uploadVideo } from "../controllers/v1";
+import {
+  getVideos,
+  profile,
+  updateMetadataVideo,
+  uploadVideo,
+} from "../controllers/v1";
 import decodeAccessToken from "../middlewares/decodeAccessToken";
 
 const router = express.Router();
+
+// get videos
+router.get("/video/:limit/:offset", getVideos);
 
 router.use(decodeAccessToken);
 

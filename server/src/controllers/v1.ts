@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { ExtendsResponse } from "../types";
+import { ExtendsResponse, UpdateMetadataVideo } from "../types";
 import tmp from "tmp";
 import busboy from "busboy";
 import logger from "../util/winstonLog";
@@ -95,16 +95,8 @@ export const uploadVideo = (req: Request, res: ExtendsResponse) => {
   }
 };
 
-interface MetadataVideo {
-  [key: string]: any;
-  title: string;
-  description: string;
-  id: string;
-  isFileExist?: boolean;
-}
-
 export const updateMetadataVideo = async (
-  req: Request<any, any, MetadataVideo>,
+  req: Request<any, any, UpdateMetadataVideo>,
   res: ExtendsResponse
 ) => {
   try {
@@ -189,12 +181,73 @@ export const updateMetadataVideo = async (
           {
             description: description || videoDb.description,
             name: title || videoDb.name,
+            updatedAt: Date.now(),
           }
         );
       }
     });
     req.pipe(bb);
   } catch (err) {
+    logger(module).info(err);
+    handleError(err as Error, res);
+  }
+};
+
+interface GetVideosParams {
+  limit: string | undefined;
+  offset: string | undefined;
+}
+
+export const getVideos = async (
+  req: Request<GetVideosParams>,
+  res: ExtendsResponse
+) => {
+  try {
+    let { limit, offset } = req.params;
+    limit = limit || undefined;
+    offset = offset || undefined;
+
+    if (!limit || !offset)
+      throw new HTTPError({
+        message: "Limit and Offset not set",
+        name: "OffsetLimitNotFound",
+        status: HttpStatusCode.BAD_REQUEST_400,
+      });
+
+    const videos = await Videos.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "users_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $project: {
+          videos_id: "$_id",
+          "users_id._id": "$user._id",
+          "users_id.name": "$user.name",
+          "users_id.image": "$user.image",
+          name: "$name",
+          duration: "$duration",
+          thumbnail: "$thumbnail",
+          likes: { $size: "$likes" },
+          createdAt: "$createdAt",
+        },
+      },
+    ])
+      .skip(parseInt(offset) * parseInt(limit))
+      .limit(parseInt(limit));
+
+    res.status(HttpStatusCode.OK_200).json({
+      videos,
+    });
+  } catch (err) {
+    console.error(err);
     logger(module).info(err);
     handleError(err as Error, res);
   }

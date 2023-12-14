@@ -39,7 +39,7 @@ async function main() {
 
   app.use(
     "/static",
-    express.static(path.join(process.cwd(), "storages", "images"))
+    express.static(path.join(process.cwd(), "storages", "thumbnails"))
   );
   app.use(
     morgan(":method :url :status :res[content-length] - :response-time ms")

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { Models } from "../types";
 
-const VideosSchema = new mongoose.Schema({
+const VideosSchema = new mongoose.Schema<Models.IVideos>({
   users_id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
