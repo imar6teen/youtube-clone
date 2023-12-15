@@ -57,15 +57,16 @@ function AfterUploadModal({
     e.preventDefault();
     let target = e.target as unknown as TempForm;
     let files = target.thumbnail.files as FileList;
+    const videoId = uploadResponse?.data.video_id.split("-")[0];
 
     axios
       .put(
         `${VITE_BACKEND_URL}/api/v1/video`,
         {
-          id: uploadResponse?.data.video_id,
+          id: videoId,
           title: target.title.value,
           description: target.description.value,
-          thumbnail: files.length !== 0 ? files[0] : null,
+          thumbnail: files.length !== 0 ? files[0] : "",
         },
         {
           headers: { "Content-Type": "multipart/form-data", Accept: "*/*" },

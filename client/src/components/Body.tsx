@@ -23,7 +23,6 @@ function Body() {
         `${VITE_BACKEND_URL}/api/v1/video/${limit}/${offset}`,
         { withCredentials: true }
       );
-      console.log(res.data.videos);
       if (res.data.videos.length === 0) setHasMore(false);
 
       // this is for preventing duplicate request because React.Strictmode

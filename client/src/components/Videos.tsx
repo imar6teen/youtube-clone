@@ -17,7 +17,10 @@ function Videos(props: Props) {
     props.prop;
   const thumbnailName = thumbnail.split(".")[0];
   return (
-    <Link to={`/watch/${videos_id}`} className="video">
+    <Link
+      to={`/watch/${videos_id}-${users_id._id}-${thumbnailName}`}
+      className="video"
+    >
       <div className="video__thumbnail">
         <img
           src={`${VITE_BACKEND_URL}/static/${users_id._id}/${thumbnailName}/${thumbnail}`}

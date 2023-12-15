@@ -15,8 +15,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <Home />,
   },
+  // uuid instead of id because it contains video_id, users_id, and video file name
+  // so make sense to chane it to uuid rather than id due to its structure (video_id)-(users_id)-(video_name)
   {
-    path: "/watch/:id",
+    path: "/watch/:uuid",
     element: <Watch />,
   },
   {
