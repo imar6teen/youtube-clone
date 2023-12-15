@@ -29,3 +29,5 @@ dist-ssr
 
 
 */keys/*
+*/tests/*.test.js
+*/storages/
