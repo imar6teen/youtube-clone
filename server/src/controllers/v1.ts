@@ -63,11 +63,12 @@ export const uploadVideo = (req: Request, res: ExtendsResponse) => {
       const saveVideoTo = path.join(videoPath, videoName);
 
       await Ffmpeg.convertAndSaveFile(tempFile.name, saveVideoTo);
-      tempFile.removeCallback();
 
-      const { format } = await Ffmpeg.probe(saveVideoTo);
+      const { format } = await Ffmpeg.probe(tempFile.name);
 
       await Ffmpeg.takeScreenShot(saveVideoTo, imagePath, format);
+
+      tempFile.removeCallback();
 
       const video = new Videos({
         users_id: res.locals.user.id,
@@ -82,7 +83,9 @@ export const uploadVideo = (req: Request, res: ExtendsResponse) => {
         .status(HttpStatusCode.CREATED_201)
         .json({
           msg: "File Uploaded Successfully",
-          video_id: video._id,
+          video_id: `${video._id}-${res.locals.user.id}-${
+            videoName.split(".")[0]
+          }`,
           thumbnail: imageName,
         });
     });

@@ -99,8 +99,12 @@ export const login = async (req: Request, res: ExtendsResponse) => {
         picture,
       });
   } catch (err) {
-    logger(module).info(err);
-    handleError(err as Error, res);
+    const error = err as Error;
+    logger(module).info({
+      name: error.name,
+      message: error.message,
+    });
+    handleError(error, res);
   }
 };
 
