@@ -61,11 +61,12 @@ async function main() {
     })
   );
   app.use(
-    cors({
-      credentials: true,
-      origin: ["http://localhost:5173"],
-      methods: ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"],
-    })
+    // cors({
+    //   credentials: true,
+    //   origin: ["http://localhost:5173"],
+    //   methods: ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"],
+    // })
+    cors()
   );
 
   app.get("/ping", async (_, res) => res.send("healthy"));
@@ -89,11 +90,12 @@ async function main() {
   // prevent cors for hls server
   httpAttach(
     server,
-    cors({
-      credentials: true,
-      origin: ["http://localhost:5173"],
-      methods: ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"],
-    })
+    // cors({
+    //   credentials: true,
+    //   origin: ["http://localhost:5173"],
+    //   methods: ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"],
+    // })
+    cors()
   );
 
   server.listen(PORT, () => {
