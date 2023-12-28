@@ -55,18 +55,17 @@ async function main() {
   app.use(
     rateLimit({
       windowMs: parseInt(RATE_LIMIT_REFRESH as string) * 60 * 1000, // 5 minutes
-      limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+      limit: 10000, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
       standardHeaders: "draft-6", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
       legacyHeaders: true, // Disable the `X-RateLimit-*` headers
     })
   );
   app.use(
-    // cors({
-    //   credentials: true,
-    //   origin: ["http://localhost:5173"],
-    //   methods: ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"],
-    // })
-    cors()
+    cors({
+      credentials: true,
+      origin: ["http://localhost:5173"],
+      methods: ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"],
+    })
   );
 
   app.get("/ping", async (_, res) => res.send("healthy"));
@@ -90,12 +89,11 @@ async function main() {
   // prevent cors for hls server
   httpAttach(
     server,
-    // cors({
-    //   credentials: true,
-    //   origin: ["http://localhost:5173"],
-    //   methods: ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"],
-    // })
-    cors()
+    cors({
+      credentials: true,
+      origin: ["http://localhost:5173"],
+      methods: ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"],
+    })
   );
 
   server.listen(PORT, () => {
