@@ -1,13 +1,13 @@
+div#watch {
+    position: relative;
+}
+
 div#watch div#watch__video{
+    margin-top: 5rem;
     width: 100%;
     height: 250px;
 }
-div#watch div#watch__video video{
+div#watch video {
     width: 100%;
     height: 100%;
-}
-
-div#watch button {
-    padding: 20px;
-    border: 1px solid black;
 }

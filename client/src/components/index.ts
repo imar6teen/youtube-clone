@@ -8,6 +8,7 @@ import Navbar from "./Navbar";
 import Videos from "./Videos";
 import UploadVideoModal from "./UploadVideoModal";
 import Modal from "./Modal";
+import VideoPlayer from "./VideoPlayer";
 
 export {
   SidebarAccount,
@@ -20,4 +21,5 @@ export {
   Videos,
   UploadVideoModal,
   Modal,
+  VideoPlayer,
 };
