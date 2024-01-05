@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { Models } from "../types";
 
-const CommentsSchema = new mongoose.Schema({
+const CommentsSchema = new mongoose.Schema<Models.IComment>({
   videos_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Videos",
@@ -36,4 +37,4 @@ const CommentsSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Comments", CommentsSchema);
+export default mongoose.model<Models.IComment>("Comments", CommentsSchema);

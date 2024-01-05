@@ -1,7 +1,11 @@
 import express from "express";
 import {
+  addComment,
+  getMetadataVideo,
   getVideos,
+  likeVideo,
   profile,
+  sseCommentVideo,
   updateMetadataVideo,
   uploadVideo,
 } from "../controllers/v1";
@@ -11,6 +15,8 @@ const router = express.Router();
 
 // get videos
 router.get("/video/:limit/:offset", getVideos);
+
+router.get("/metadata-video/:videoId", getMetadataVideo);
 
 router.use(decodeAccessToken);
 
@@ -25,5 +31,9 @@ router
   .post(uploadVideo)
   // update metadata of a video
   .put(updateMetadataVideo);
+
+router.put("/like", likeVideo);
+
+router.route("/comment").get(sseCommentVideo).post(addComment);
 
 export default router;

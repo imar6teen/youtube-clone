@@ -30,6 +30,16 @@ namespace Models {
     createdAt: Date;
     updatedAt: Date;
   }
+
+  export interface IComment {
+    videos_id: Schema.Types.ObjectId;
+    users_id: Schema.Types.ObjectId;
+    reply_to: Schema.Types.ObjectId;
+    comment: String;
+    likes: Schema.Types.ObjectId;
+    createdAt: Date;
+    updatedAt: Date;
+  }
 }
 
 export default Models;

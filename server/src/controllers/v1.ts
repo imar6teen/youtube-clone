@@ -1,4 +1,4 @@
-import { Request } from "express";
+import { Request, request } from "express";
 import { ExtendsResponse, UpdateMetadataVideo } from "../types";
 import tmp from "tmp";
 import busboy from "busboy";
@@ -7,10 +7,11 @@ import path from "path";
 import { randomFillSync } from "crypto";
 import fs from "fs";
 import handleError, { HTTPError } from "../util/handleError";
-import { Videos } from "../models";
+import { Videos, VideosLikes, Comments } from "../models";
 import Ffmpeg from "../util/FfmpegPromisify";
 import HttpStatusCode from "../constants/StatusCode";
 import { LOCAL_STORAGE } from "../config/app";
+import mongoose, { Types } from "mongoose";
 
 const removeDir = (videoPath: string, imagePath: string) => {
   fs.rmSync(path.join(videoPath), { recursive: true, force: true });
@@ -187,6 +188,10 @@ export const updateMetadataVideo = async (
             updatedAt: Date.now(),
           }
         );
+
+        res.status(HttpStatusCode.ACCEPTED_202).json({
+          msg: "Success",
+        });
       }
     });
     req.pipe(bb);
@@ -255,3 +260,169 @@ export const getVideos = async (
     handleError(err as Error, res);
   }
 };
+
+type ClientsConnect = {
+  [key: string]: any[];
+};
+// {videoId : [all clients]}
+const clientsConnect: ClientsConnect = {};
+
+export const getMetadataVideo = async (req: Request, res: ExtendsResponse) => {
+  const { videoId } = req.params;
+
+  const metadata = await Videos.aggregate([
+    {
+      $match: {
+        _id: new Types.ObjectId(videoId),
+      },
+    },
+    {
+      $lookup: {
+        from: "videoslikes",
+        localField: "_id",
+        foreignField: "videos_id",
+        as: "likes",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "users_id",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    // {
+    //   $lookup: {
+    //     from: "comments",
+    //     localField: "_id",
+    //     foreignField: "videos_id",
+    //     as: "comments",
+    //     pipeline: [
+    //       {
+    //         $lookup: {
+    //           from: "commentslikes",
+    //           localField: "_id",
+    //           foreignField: "comments_id",
+    //           as: "likes",
+    //         },
+    //       },
+    //     ],
+    //   },
+    // },
+    {
+      $lookup: {
+        from: "comments",
+        localField: "_id",
+        foreignField: "videos_id",
+        as: "comments",
+      },
+    },
+    {
+      $unwind: "$user",
+    },
+    {
+      $project: {
+        videos_id: "$_id",
+        name: "$name",
+        duration: "$duration",
+        thumbnail: "$thumbnail",
+        likes: {
+          $size: {
+            $filter: {
+              input: "$likes",
+              as: "likes",
+              cond: { $eq: ["$$likes.is_like", true] },
+            },
+          },
+        },
+        // dislikes: {
+        //   $size: {
+        //     $filter: {
+        //       input: "$likes",
+        //       as: "dislikes",
+        //       cond: { $eq: ["$$dislikes.is_like", false] },
+        //     },
+        //   },
+        // },
+        comments: { $size: "$comments" },
+        createdAt: "$createdAt",
+        updatedAt: "$updatedAt",
+        description: "$description",
+        "user._id": "$user._id",
+        "user.name": "$user.name",
+        "user.image": "$user.image",
+        "user.email": "$user.email",
+      },
+    },
+  ]);
+
+  if (!clientsConnect[videoId]) clientsConnect[videoId] = [res];
+  else clientsConnect[videoId].push(res);
+
+  res.send(metadata);
+};
+
+export const likeVideo = async (req: Request, res: ExtendsResponse) => {
+  try {
+    const { user } = res.locals;
+    const { isLike, videoId } = req.body;
+    const videoLikes = await VideosLikes.findOne({
+      videos_id: videoId,
+      users_id: user.id,
+    });
+
+    if (videoLikes === null) {
+      await new VideosLikes({
+        videos_id: videoId,
+        users_id: user.id,
+        is_like: isLike,
+      }).save();
+      res.status(HttpStatusCode.CREATED_201).json({ msg: "success" });
+    } else if (isLike !== videoLikes.is_like) {
+      await VideosLikes.updateOne(
+        {
+          _id: videoLikes?._id,
+        },
+        { is_like: isLike }
+      );
+      res.status(HttpStatusCode.ACCEPTED_202).json({ msg: "success" });
+    } else if (isLike === videoLikes.is_like) {
+      await VideosLikes.deleteOne({
+        _id: videoLikes?._id,
+      });
+      res
+        .status(HttpStatusCode.RESET_CONTENT_205)
+        .json({ msg: "deleted like" });
+    }
+  } catch (err) {
+    logger(module).error({
+      name: (err as Error).name,
+      msg: (err as Error).message,
+    });
+    handleError(err as Error, res);
+  }
+};
+
+export const sseCommentVideo = async (req: Request, res: ExtendsResponse) => {};
+
+export const addComment = async (req: Request, res: ExtendsResponse) => {
+  try {
+    const { user } = res.locals;
+    const { comment, videoId } = req.body;
+    await new Comments({
+      users_id: user.id,
+      videos_id: videoId,
+      comment: comment,
+    }).save();
+    res.status(HttpStatusCode.CREATED_201).json({ msg: "success" });
+  } catch (err) {
+    logger(module).error({
+      name: (err as Error).name,
+      msg: (err as Error).message,
+    });
+    handleError(err as Error, res);
+  }
+};
+
+export const likeComment = async (req: Request, res: ExtendsResponse) => {};
