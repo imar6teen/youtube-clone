@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { Models } from "../types";
 
-const VideosLikesSchema = new mongoose.Schema({
+const VideosLikesSchema = new mongoose.Schema<Models.IVideosLikes>({
   videos_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Videos",
@@ -25,4 +26,7 @@ const VideosLikesSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("VideosLikes", VideosLikesSchema);
+export default mongoose.model<Models.IVideosLikes>(
+  "VideosLikes",
+  VideosLikesSchema
+);

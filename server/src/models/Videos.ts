@@ -42,4 +42,4 @@ const VideosSchema = new mongoose.Schema<Models.IVideos>({
   },
 });
 
-export default mongoose.model("Videos", VideosSchema);
+export default mongoose.model<Models.IVideos>("Videos", VideosSchema);
