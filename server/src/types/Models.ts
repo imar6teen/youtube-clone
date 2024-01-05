@@ -7,8 +7,8 @@ namespace Models {
     subscribers: Schema.Types.ObjectId;
     image: string;
     videos: Schema.Types.ObjectId;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Schema.Types.Date;
+    updatedAt: Schema.Types.Date;
   }
 
   export interface IVideos {
@@ -19,8 +19,16 @@ namespace Models {
     thumbnail?: String;
     likes: Schema.Types.ObjectId[];
     comments: Schema.Types.ObjectId[];
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Schema.Types.Date;
+    updatedAt: Schema.Types.Date;
+  }
+
+  export interface IVideosLikes {
+    videos_id: Schema.Types.ObjectId;
+    users_id: Schema.Types.ObjectId;
+    is_like: Schema.Types.Boolean;
+    createdAt: Schema.Types.Date;
+    updatedAt: Schema.Types.Date;
   }
 }
 
