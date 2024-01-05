@@ -5,9 +5,4 @@ div#watch {
 div#watch div#watch__video{
     margin-top: 5rem;
     width: 100%;
-    height: 250px;
-}
-div#watch video {
-    width: 100%;
-    height: 100%;
 }

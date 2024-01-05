@@ -6,6 +6,7 @@ import ModalProps from "./ModalProps";
 import UploadVideoModalProps from "./UploadVideoModalProps";
 import AfterUploadModalProps from "./AfterUploadModalProps";
 import { GetVideosResponse, VideosFormat } from "./VideoFormat";
+import Comment from "./CommentProps";
 
 export type {
   CategoryProps,
@@ -17,4 +18,5 @@ export type {
   AfterUploadModalProps,
   GetVideosResponse,
   VideosFormat,
+  Comment,
 };

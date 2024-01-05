@@ -1,0 +1,105 @@
+div#watch__description {
+    margin: .5rem 1rem;
+}
+
+div#watch__description div#watch__description__title {
+    height: 3.75rem;
+}
+
+div#watch__description div#watch__description__title h1 {
+    font-size: 16px;
+    line-height: 150%;
+}
+
+div#watch__description div#watch__description__account {
+    display: flex;
+    column-gap: .5rem;
+    align-items: center;
+    margin-bottom: .625rem;
+}
+
+div#watch__description div#watch__description__account div#watch__description__account__image {
+    height: 2.5rem;
+    width: 2.5rem;
+}
+
+div#watch__description div#watch__description__account div#watch__description__account__image img {
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+}
+
+div#watch__description div#watch__description__account div#watch__description__account__name div#watch__description__account__name__name h2 {
+    font-size: 14px;
+}
+
+div#watch__description div#watch__description__account div#watch__description__account__name div#watch__description__account__name__subscribers p {
+    font-size: smaller;
+}
+
+div#watch__description div#watch__description__account div#watch__description__account__subscribers_button {
+    width: 6.25rem;
+    height: 1.875rem;
+}
+
+div#watch__description div#watch__description__account div#watch__description__account__subscribers_button button {
+    height: 100%;
+    width: 100%;
+    background-color: var(--red);
+    border-radius: 6.25rem;
+    color: white;
+    font-weight: bold;
+}
+
+div#watch__description div#watch__description__likes_share {
+    display: flex;
+    width: 13.75rem;
+    height: 3.125rem;
+}
+
+div#watch__description div#watch__description__likes_share img {
+    width:1.25rem;
+    height:1.25rem;
+}
+
+div#watch__description div#watch__description__likes_share__likes{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .05);
+    column-gap: 30px;
+    border-radius: 50px;
+    padding: 0 8px;
+}
+
+div#watch__description div#watch__description__likes_share__likes button#watch__description__likes_share__likes__likes,
+div#watch__description div#watch__description__likes_share__likes button#watch__description__likes_share__likes__dislikes,
+div#watch__description div#watch__description__likes_share__likes button#watch__description__likes_share__likes__share {
+    display: flex;
+    align-items: center;
+}
+
+div#watch__description div#watch__description__likes_share__likes button#watch__description__likes_share__likes__likes{
+    column-gap: 10px;
+}
+
+div#watch__description div#watch__description__description{
+    margin-top: 1rem;
+    padding: .5rem 1rem 0 1rem;
+    background-color: rgba(0, 0, 0, .05);
+    border-radius: 20px;
+}
+
+div#watch__description div#watch__description__description div#watch__description__description__description p {
+    /* for ... triple dots to show more */
+    /* overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical; */
+    line-height: 1.5rem;
+    padding-bottom: .35rem;
+}
+
+div#watch__comment {
+    margin: .5rem 1rem;
+}
