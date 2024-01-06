@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Comment from "./Comment";
-import axios, { AxiosResponse } from "axios";
-import { VITE_BACKEND_URL, VITE_NODE_ENV } from "../config/app";
+import { VITE_BACKEND_URL } from "../config/app";
 
 type ComemntsProps = {
   videoId: string;

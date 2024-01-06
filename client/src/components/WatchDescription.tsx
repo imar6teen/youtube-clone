@@ -10,7 +10,6 @@ import en from "javascript-time-ago/locale/en";
 import { useEffect, useState } from "react";
 import { VITE_BACKEND_URL, VITE_NODE_ENV } from "../config/app";
 import { appStates } from "../hooks";
-import Comment from "../components/Comment";
 import Comments from "./Comments";
 
 type WatchDescriptionProps = {
