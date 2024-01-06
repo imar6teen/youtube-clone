@@ -103,3 +103,7 @@ div#watch__description div#watch__description__description div#watch__descriptio
 div#watch__comment {
     margin: .5rem 1rem;
 }
+
+div#watch__comment div#watch__comment__count{
+    margin: .7rem 0;
+}

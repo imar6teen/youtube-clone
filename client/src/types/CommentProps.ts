@@ -3,12 +3,13 @@ namespace Comment {
     pictureUrl: string;
     username: string;
     text: string;
-    likesCount: number;
+    createdAt: string;
   };
 
-  export type Props = Data & {
-    replies?: [Data];
-  };
+  export type Props = Data;
+  // export type Props = Data & {
+  //   replies?: [Data];
+  // };
 }
 
 export default Comment;

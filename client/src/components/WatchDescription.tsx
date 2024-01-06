@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { VITE_BACKEND_URL, VITE_NODE_ENV } from "../config/app";
 import { appStates } from "../hooks";
 import Comment from "../components/Comment";
+import Comments from "./Comments";
 
 type WatchDescriptionProps = {
   videoId: string;
@@ -37,7 +38,7 @@ type MetadataVideo = {
   comments: number;
 };
 
-TimeAgo.addDefaultLocale(en);
+TimeAgo.addLocale(en);
 
 function numberWithCommas(x: number) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -197,7 +198,7 @@ function WatchDescription({ videoId }: WatchDescriptionProps) {
         {states.Auth.email && states.Auth.name && states.Auth.pictureUrl && (
           <CommentInput videoId={videoId} />
         )}
-        <div id="watch__comment__comments">{/* <Comment /> */}</div>
+        <Comments videoId={videoId} />
       </div>
     </>
   );
