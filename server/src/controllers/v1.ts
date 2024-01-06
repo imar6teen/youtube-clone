@@ -1,10 +1,10 @@
-import { Request, request } from "express";
+import { Request } from "express";
 import { ExtendsResponse, UpdateMetadataVideo } from "../types";
 import tmp from "tmp";
 import busboy from "busboy";
 import logger from "../util/winstonLog";
 import path from "path";
-import { randomFillSync } from "crypto";
+import { randomBytes, randomFillSync } from "crypto";
 import fs from "fs";
 import handleError, { HTTPError } from "../util/handleError";
 import { Videos, VideosLikes, Comments } from "../models";
@@ -92,9 +92,11 @@ export const uploadVideo = (req: Request, res: ExtendsResponse) => {
     });
     req.pipe(bb);
   } catch (err) {
-    console.log(err);
     removeDir(videoPath, imagePath);
-    logger(module).info(err);
+    logger(module).error({
+      name: (err as Error).name,
+      message: (err as Error).message,
+    });
     handleError(err as Error, res);
   }
 };
@@ -196,7 +198,10 @@ export const updateMetadataVideo = async (
     });
     req.pipe(bb);
   } catch (err) {
-    logger(module).info(err);
+    logger(module).error({
+      name: (err as Error).name,
+      message: (err as Error).message,
+    });
     handleError(err as Error, res);
   }
 };
@@ -255,112 +260,124 @@ export const getVideos = async (
       videos,
     });
   } catch (err) {
-    console.error(err);
-    logger(module).info(err);
+    logger(module).error({
+      name: (err as Error).name,
+      message: (err as Error).message,
+    });
     handleError(err as Error, res);
   }
 };
 
+type ClientsValue = {
+  clientId: string;
+  res: ExtendsResponse;
+};
+
 type ClientsConnect = {
-  [key: string]: any[];
+  [key: string]: ClientsValue[];
 };
 // {videoId : [all clients]}
 const clientsConnect: ClientsConnect = {};
 
 export const getMetadataVideo = async (req: Request, res: ExtendsResponse) => {
-  const { videoId } = req.params;
+  try {
+    const { videoId } = req.params;
 
-  const metadata = await Videos.aggregate([
-    {
-      $match: {
-        _id: new Types.ObjectId(videoId),
+    const metadata = await Videos.aggregate([
+      {
+        $match: {
+          _id: new Types.ObjectId(videoId),
+        },
       },
-    },
-    {
-      $lookup: {
-        from: "videoslikes",
-        localField: "_id",
-        foreignField: "videos_id",
-        as: "likes",
+      {
+        $lookup: {
+          from: "videoslikes",
+          localField: "_id",
+          foreignField: "videos_id",
+          as: "likes",
+        },
       },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "users_id",
-        foreignField: "_id",
-        as: "user",
+      {
+        $lookup: {
+          from: "users",
+          localField: "users_id",
+          foreignField: "_id",
+          as: "user",
+        },
       },
-    },
-    // {
-    //   $lookup: {
-    //     from: "comments",
-    //     localField: "_id",
-    //     foreignField: "videos_id",
-    //     as: "comments",
-    //     pipeline: [
-    //       {
-    //         $lookup: {
-    //           from: "commentslikes",
-    //           localField: "_id",
-    //           foreignField: "comments_id",
-    //           as: "likes",
-    //         },
-    //       },
-    //     ],
-    //   },
-    // },
-    {
-      $lookup: {
-        from: "comments",
-        localField: "_id",
-        foreignField: "videos_id",
-        as: "comments",
+      // {
+      //   $lookup: {
+      //     from: "comments",
+      //     localField: "_id",
+      //     foreignField: "videos_id",
+      //     as: "comments",
+      //     pipeline: [
+      //       {
+      //         $lookup: {
+      //           from: "commentslikes",
+      //           localField: "_id",
+      //           foreignField: "comments_id",
+      //           as: "likes",
+      //         },
+      //       },
+      //     ],
+      //   },
+      // },
+      {
+        $lookup: {
+          from: "comments",
+          localField: "_id",
+          foreignField: "videos_id",
+          as: "comments",
+        },
       },
-    },
-    {
-      $unwind: "$user",
-    },
-    {
-      $project: {
-        videos_id: "$_id",
-        name: "$name",
-        duration: "$duration",
-        thumbnail: "$thumbnail",
-        likes: {
-          $size: {
-            $filter: {
-              input: "$likes",
-              as: "likes",
-              cond: { $eq: ["$$likes.is_like", true] },
+      {
+        $unwind: "$user",
+      },
+      {
+        $project: {
+          videos_id: "$_id",
+          name: "$name",
+          duration: "$duration",
+          thumbnail: "$thumbnail",
+          likes: {
+            $size: {
+              $filter: {
+                input: "$likes",
+                as: "likes",
+                cond: { $eq: ["$$likes.is_like", true] },
+              },
             },
           },
+          // dislikes: {
+          //   $size: {
+          //     $filter: {
+          //       input: "$likes",
+          //       as: "dislikes",
+          //       cond: { $eq: ["$$dislikes.is_like", false] },
+          //     },
+          //   },
+          // },
+          comments: { $size: "$comments" },
+          createdAt: "$createdAt",
+          updatedAt: "$updatedAt",
+          description: "$description",
+          "user._id": "$user._id",
+          "user.name": "$user.name",
+          "user.image": "$user.image",
+          "user.email": "$user.email",
         },
-        // dislikes: {
-        //   $size: {
-        //     $filter: {
-        //       input: "$likes",
-        //       as: "dislikes",
-        //       cond: { $eq: ["$$dislikes.is_like", false] },
-        //     },
-        //   },
-        // },
-        comments: { $size: "$comments" },
-        createdAt: "$createdAt",
-        updatedAt: "$updatedAt",
-        description: "$description",
-        "user._id": "$user._id",
-        "user.name": "$user.name",
-        "user.image": "$user.image",
-        "user.email": "$user.email",
       },
-    },
-  ]);
+    ]);
 
-  if (!clientsConnect[videoId]) clientsConnect[videoId] = [res];
-  else clientsConnect[videoId].push(res);
-
-  res.send(metadata);
+    res.send(metadata);
+  } catch (err) {
+    logger(module).error({
+      name: (err as Error).name,
+      message: (err as Error).message,
+    });
+    handleError(err as Error, res);
+  }
 };
 
 export const likeVideo = async (req: Request, res: ExtendsResponse) => {
@@ -398,13 +415,92 @@ export const likeVideo = async (req: Request, res: ExtendsResponse) => {
   } catch (err) {
     logger(module).error({
       name: (err as Error).name,
-      msg: (err as Error).message,
+      message: (err as Error).message,
     });
     handleError(err as Error, res);
   }
 };
 
-export const sseCommentVideo = async (req: Request, res: ExtendsResponse) => {};
+type SseCommentVideoParams = {
+  videoId: string;
+};
+export const sseCommentVideo = async (
+  req: Request<SseCommentVideoParams>,
+  res: ExtendsResponse
+) => {
+  try {
+    const { videoId } = req.params;
+    const clientId = randomBytes(48).toString("hex");
+
+    const comments = await Comments.aggregate([
+      {
+        $match: { videos_id: new mongoose.Types.ObjectId(videoId) },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "users_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $project: {
+          username: "$user.name",
+          pictureUrl: "$user.image",
+          text: "$comment",
+          createdAt: "$createdAt",
+        },
+      },
+    ]);
+
+    req.on("close", () => {
+      logger(module).info(`client ${clientId} closed in video ID :${videoId}`);
+      clientsConnect[videoId] = clientsConnect[videoId].filter(
+        (client) => client.clientId !== clientId
+      );
+    });
+
+    if (clientsConnect[videoId])
+      clientsConnect[videoId].push({ clientId, res });
+    else clientsConnect[videoId] = [{ clientId, res }];
+
+    const headers = {
+      "Content-Type": "text/event-stream",
+      Connection: "keep-alive",
+      "Cache-Control": "no-cache",
+    };
+
+    // using eventSource, we need to work without abstraction a bit. addEventListener we need to match it within the server.
+    // See on client in Comments Component
+    // for this case the event called "data" and after that don't forget to add \n
+    // after \n this is where the data comes in. we need to write as "data: {data in stringify}"
+    //!NOTE: \n IS IMPORTANT, CAREFUL!
+    res.writeHead(HttpStatusCode.OK_200, headers);
+    res.write(`event: data\n`);
+    res.write(`data:${JSON.stringify(comments)}\n\n`);
+  } catch (err) {
+    logger(module).error({
+      name: (err as any).name,
+      message: (err as any).message,
+    });
+    handleError(err as Error, res);
+  }
+};
+
+function sendAll(videoId: string, jsonStringified: string) {
+  const clients = clientsConnect[videoId];
+  if (clients.length === 0 || !clients) return;
+
+  for (let client of clients) {
+    const { res } = client;
+    res.write(`event: data\n`);
+    res.write(`data: ${jsonStringified}\n\n`);
+  }
+}
 
 export const addComment = async (req: Request, res: ExtendsResponse) => {
   try {
@@ -415,14 +511,39 @@ export const addComment = async (req: Request, res: ExtendsResponse) => {
       videos_id: videoId,
       comment: comment,
     }).save();
+
+    // read back after save
+    const comments = await Comments.aggregate([
+      {
+        $match: { videos_id: new mongoose.Types.ObjectId(videoId) },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "users_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $project: {
+          username: "$user.name",
+          pictureUrl: "$user.image",
+          text: "$comment",
+          createdAt: "$createdAt",
+        },
+      },
+    ]);
+    sendAll(videoId, JSON.stringify(comments));
     res.status(HttpStatusCode.CREATED_201).json({ msg: "success" });
   } catch (err) {
     logger(module).error({
       name: (err as Error).name,
-      msg: (err as Error).message,
+      message: (err as Error).message,
     });
     handleError(err as Error, res);
   }
 };
-
-export const likeComment = async (req: Request, res: ExtendsResponse) => {};

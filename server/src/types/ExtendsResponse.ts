@@ -9,6 +9,10 @@ interface LocalsUser {
   };
 }
 
+interface ClientWatch {
+  clientId: string;
+}
+
 interface ExtendsResponse extends Response<any, LocalsUser> {}
 
 export default ExtendsResponse;

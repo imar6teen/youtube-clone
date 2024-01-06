@@ -18,6 +18,8 @@ router.get("/video/:limit/:offset", getVideos);
 
 router.get("/metadata-video/:videoId", getMetadataVideo);
 
+router.get("/comment/:videoId", sseCommentVideo);
+
 router.use(decodeAccessToken);
 
 router.get("/profile", profile);
@@ -34,6 +36,6 @@ router
 
 router.put("/like", likeVideo);
 
-router.route("/comment").get(sseCommentVideo).post(addComment);
+router.post("/comment", addComment);
 
 export default router;
