@@ -31,3 +31,5 @@ dist-ssr
 */keys/*
 */tests/*.test.js
 */storages/
+
+server/oauth.json
